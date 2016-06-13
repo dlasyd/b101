@@ -18,7 +18,7 @@ from django.contrib import admin
 from articles.views import article_list, single_article
 
 urlpatterns = [
-    # url(r'^admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls),
     url(r'^$', article_list, name='article-list'),
     url(r'^article/(?P<id>[0-9]+)$', single_article, name='article-view')
 ]
