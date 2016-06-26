@@ -1,21 +1,50 @@
 from django.test import TestCase
 from .models import Article
+from django.contrib.auth.models import User
+import datetime
 
 
 class ArticleModelTest(TestCase):
     def test_create_article(self):
-        article = Article()
-        article.title = 'This is a test article'
-        article.text = '<p>Full text of article, containing html</p>'
-        article.save()
 
+        author1 = User('john', 'lennon@thebeatles.com', 'johnpassword')
+        User.objects.create()
+        u1 = User.objects.first()
+
+        Article.objects.create(title='Статья для теста',
+                               text='<p>Full text of article, containing html</p>',
+                               preview_text='This is preview text',
+                               author=u1,
+                               creation_date=datetime.datetime.now()
+                               # main_image='?other table',
+                               # category='?other table',
+                               # url_alias='?other table',
+                               # tags='?other table legacy tags'
+                               )
+
+        article = Article.objects.first()
         self.assertEqual(1, Article.objects.count())
+        self.assertIsNotNone(article.creation_date)
+        self.assertFalse(article.is_published)
+        # self.assertEqual(article.url_alias, 'staia-dlya-testa')
 
 
 class ArticleTest(TestCase):
     def setUp(self):
-        Article.objects.create(title='first title', text='low carb diet helps weight loss')
-        Article.objects.create(title='Second title', text='second article text, more interesting')
+        User.objects.create()
+        nata = User.objects.first()
+        Article.objects.create(title='first title',
+                               text='low carb diet helps weight loss',
+                               preview_text='eat less',
+                               author=nata,
+                               creation_date=datetime.datetime.now(),
+                               is_published=True)
+        Article.objects.create(title='Second title',
+                               text='second article text, more interesting',
+                               preview_text='interesting',
+                               author=nata,
+                               creation_date=datetime.datetime.now(),
+                               is_published=True)
         self.response = self.client.get('/')
         self.single_article = self.client.get('/article/1')
 

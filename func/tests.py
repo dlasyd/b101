@@ -1,19 +1,29 @@
 from selenium import webdriver
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from articles.models import Article
-import time
+from django.contrib.auth.models import User
+import datetime
 
 
 class FunctionalTests(StaticLiveServerTestCase):
     def setUp(self):
+        User.objects.create()
+        u1 = User.objects.first()
+
         self.article1 = Article()
         self.article1.title = 'Start your own wending business'
         self.article1.text = 'Wending machines are easy to maintain and they will make a lot of money'
+        self.article1.preview_text = 'This is preview text'
+        self.article1.author = u1
+        self.article1.creation_date = datetime.datetime.now()
         self.article1.save()
 
         self.article2 = Article()
         self.article2.title = 'Start up money'
         self.article2.text = 'Where to get them'
+        self.article2.preview_text = 'This is preview text'
+        self.article2.author = u1
+        self.article2.creation_date = datetime.datetime.now()
         self.article2.save()
 
         self.browser = webdriver.Firefox()
@@ -37,7 +47,4 @@ class FunctionalTests(StaticLiveServerTestCase):
 
         assert self.article2.title in self.browser.title
         assert self.article2.text in self.browser.page_source
-
-
-
 
