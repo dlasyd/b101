@@ -1,0 +1,2 @@
+make sure that filenames are created correctly and conflicts are resolved
+image size constrains
