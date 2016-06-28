@@ -9,5 +9,6 @@ class Article(models.Model):
     author = models.ForeignKey(User)
     creation_date = models.DateTimeField()
     is_published = models.BooleanField(default=False)
-    teaser_image = models.ImageField(upload_to="/Users/Andrey/IdeaProjects/b111/files/images/",
+
+    teaser_image = models.ImageField(upload_to="teaser-images",
                                      blank=True)

@@ -1,9 +1,18 @@
 body {
     font-size: 16px;
-    line-height: 1.45;
+    line-height: 1.625;
     font-family: 'Open sans', sans-serif;
+    font-style: normal;
     font-weight: 300;
     color: #444444;
+}
+
+a {
+    text-decoration: underline;
+    color: #2F71A2;
+}
+a:hover {
+    color:red;
 }
 
 .main-content {
@@ -41,4 +50,8 @@ h2 {
 /*left column blocks*/
 #logo {
     padding: 0 0 20px 0;
+}
+
+.date {
+    font-size: 15px;
 }

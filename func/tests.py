@@ -2,6 +2,7 @@ from selenium import webdriver
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from articles.models import Article
 from django.contrib.auth.models import User
+from django.core.files import File
 import datetime
 
 
@@ -18,6 +19,9 @@ class FunctionalTests(StaticLiveServerTestCase):
         self.article1.creation_date = datetime.datetime.now()
         self.article1.save()
 
+        with open('articles/test/resources/test_teaser.jpg', 'rb') as image:
+            self.article1.teaser_image.save('test_teaser.jpg', File(image), save=True)
+
         self.article2 = Article()
         self.article2.title = 'Start up money'
         self.article2.text = 'Where to get them'
@@ -33,6 +37,9 @@ class FunctionalTests(StaticLiveServerTestCase):
 
     def test_user_can_read_article(self):
         self.browser.get(self.live_server_url)
+
+        assert self.article1.preview_text in self.browser.page_source
+        assert self.article1.teaser_image.url in self.browser.page_source
         # user clicks on first article title
         self.browser.find_element_by_link_text(self.article1.title).click()
         self.assertEqual(self.browser.current_url, self.live_server_url + '/article/1')

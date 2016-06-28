@@ -1,5 +1,5 @@
 import datetime
-
+from django.core.files import File
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -22,6 +22,9 @@ class ArticleTest(TestCase):
                                author=nata,
                                creation_date=datetime.datetime.now(),
                                is_published=True)
+        article = Article.objects.first()
+        with open('articles/test/resources/test_teaser.jpg', 'rb') as image:
+            article.teaser_image.save('test_teaser.jpg', File(image), save=True)
         self.response = self.client.get('/')
         self.single_article = self.client.get('/article/1')
 
@@ -29,8 +32,10 @@ class ArticleTest(TestCase):
         self.assertEqual(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, 'articles/article-list.html')
 
-    def test_article_list_view_contains_article_titles(self):
+    def test_article_list_view_contains_article_preview(self):
         self.assertEqual(self.response.context['articles'][0], Article.objects.all()[0])
+        self.assertContains(self.response, Article.objects.first().teaser_image.url)
+        self.assertContains(self.response, Article.objects.first().preview_text)
         # self.assertListEqual(self.response.context['articles'], Article.objects.all())
 
     def test_single_page_view_exists(self):

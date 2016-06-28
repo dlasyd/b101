@@ -1,2 +1,10 @@
 make sure that filenames are created correctly and conflicts are resolved
 image size constrains
+naming consistency
+https://github.com/j2a/pytils - даты со склонениями
+pagination
+delete images after tests
+
+Требования к контенту:
+всегда должен быть отформатирован в html
+разобраться с размерами картинок

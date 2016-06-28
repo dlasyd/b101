@@ -4,5 +4,9 @@
 {% endblock %}
 {% block content %}
     <h1>{{ article.title }}</h1>
+    {% if article.teaser_image %}
+        <img width="50%" height="50%" src="{{ article.teaser_image.url }}"/>
+        <p>{{ article.teaser_image.height_field }}</p>
+    {% endif %}
     <p>{{ article.text|safe }}</p>
 {% endblock %}
