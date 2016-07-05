@@ -1,8 +1,9 @@
-import datetime
 import os
+
 from django.core.files import File
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils import timezone
 
 from .models import Article
 
@@ -15,13 +16,13 @@ class ArticleTest(TestCase):
                                text='low carb diet helps weight loss',
                                preview_text='eat less',
                                author=nata,
-                               creation_date=datetime.datetime.now(),
+                               creation_date=timezone.now(),
                                is_published=True)
         Article.objects.create(title='Second title',
                                text='second article text, more interesting',
                                preview_text='interesting',
                                author=nata,
-                               creation_date=datetime.datetime.now(),
+                               creation_date=timezone.now(),
                                is_published=True)
         self.response = self.client.get('/')
         self.single_article = self.client.get('/article/1')

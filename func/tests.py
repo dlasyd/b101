@@ -3,7 +3,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from articles.models import Article
 from django.contrib.auth.models import User
 from django.core.files import File
-import datetime
+from django.utils import timezone
 import os
 
 
@@ -17,7 +17,7 @@ class FunctionalTests(StaticLiveServerTestCase):
         self.article1.text = 'Wending machines are easy to maintain and they will make a lot of money'
         self.article1.preview_text = 'This is preview text'
         self.article1.author = u1
-        self.article1.creation_date = datetime.datetime.now()
+        self.article1.creation_date = timezone.now()
         self.article1.save()
 
         with open('articles/test/resources/test_teaser.jpg', 'rb') as image:
@@ -28,7 +28,7 @@ class FunctionalTests(StaticLiveServerTestCase):
         self.article2.text = 'Where to get them'
         self.article2.preview_text = 'This is preview text'
         self.article2.author = u1
-        self.article2.creation_date = datetime.datetime.now()
+        self.article2.creation_date = timezone.now()
         self.article2.save()
 
         self.browser = webdriver.Firefox()

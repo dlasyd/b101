@@ -1,9 +1,9 @@
-import datetime
 import os
 
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.test import TestCase
+from django.utils import timezone
 
 from articles.models import Article
 
@@ -19,7 +19,7 @@ class ArticleModelTest(TestCase):
                                text='<p>Full text of article, containing html</p>',
                                preview_text='This is preview text',
                                author=u1,
-                               creation_date=datetime.datetime.now(),
+                               creation_date=timezone.now(),
                                # main_image='?other table',
                                # category='?other table',
                                # url_alias='?other table',
