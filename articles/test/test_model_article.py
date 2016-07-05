@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from django.contrib.auth.models import User
 from django.core.files import File
@@ -33,3 +34,6 @@ class ArticleModelTest(TestCase):
         self.assertIsNotNone(article.creation_date)
         self.assertFalse(article.is_published)
         # self.assertEqual(article.url_alias, 'staia-dlya-testa')
+
+        if os.path.isfile(article.teaser_image.path):
+            os.remove(article.teaser_image.path)

@@ -4,6 +4,7 @@ from articles.models import Article
 from django.contrib.auth.models import User
 from django.core.files import File
 import datetime
+import os
 
 
 class FunctionalTests(StaticLiveServerTestCase):
@@ -33,6 +34,8 @@ class FunctionalTests(StaticLiveServerTestCase):
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
+        if os.path.isfile(self.article1.teaser_image.path):
+            os.remove(self.article1.teaser_image.path)
         self.browser.close()
 
     def test_user_can_read_article(self):
