@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
+from django.utils import timezone
 import os
 
 
@@ -10,7 +11,7 @@ class Article(models.Model):
     text = models.TextField()
     preview_text = models.TextField()
     author = models.ForeignKey(User)
-    creation_date = models.DateTimeField()
+    creation_date = models.DateTimeField(default=timezone.now())
     is_published = models.BooleanField(default=False)
 
     teaser_image = models.ImageField(upload_to="teaser-images",

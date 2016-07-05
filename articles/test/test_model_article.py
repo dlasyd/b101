@@ -20,7 +20,6 @@ class ArticleModelTest(TestCase):
                                preview_text='This is preview text',
                                author=u1,
                                creation_date=timezone.now(),
-                               # main_image='?other table',
                                # category='?other table',
                                # url_alias='?other table',
                                # tags='?other table legacy tags'
@@ -37,3 +36,16 @@ class ArticleModelTest(TestCase):
 
         if os.path.isfile(article.teaser_image.path):
             os.remove(article.teaser_image.path)
+
+    def test_create_without_date_and_image(self):
+        User.objects.create()
+        u1 = User.objects.first()
+
+        Article.objects.create(title='Статья для теста',
+                               text='<p>Full text of article, containing html</p>',
+                               preview_text='This is preview text',
+                               author=u1,
+                               )
+
+        self.assertEqual(1, Article.objects.count())
+

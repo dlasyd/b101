@@ -16,13 +16,11 @@ class ArticleTest(TestCase):
                                text='low carb diet helps weight loss',
                                preview_text='eat less',
                                author=nata,
-                               creation_date=timezone.now(),
                                is_published=True)
         Article.objects.create(title='Second title',
                                text='second article text, more interesting',
                                preview_text='interesting',
                                author=nata,
-                               creation_date=timezone.now(),
                                is_published=True)
         self.response = self.client.get('/')
         self.single_article = self.client.get('/article/1')
