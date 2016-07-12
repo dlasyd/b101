@@ -3,7 +3,6 @@ import os
 from django.core.files import File
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django.utils import timezone
 
 from .models import Article
 
@@ -12,12 +11,17 @@ class ArticleTest(TestCase):
     def setUp(self):
         User.objects.create()
         nata = User.objects.first()
-        Article.objects.create(title='first title',
-                               text='low carb diet helps weight loss',
-                               preview_text='eat less',
-                               author=nata,
-                               is_published=True)
-        Article.objects.create(title='Second title',
+        # Article.objects.create(title='first title',
+        #                        text='low carb diet helps weight loss',
+        #                        preview_text='eat less',
+        #                        author=nata)
+        a1 = Article()
+        a1.title = 'Первое название'
+        a1.text = 'low carb diet helps weight loss'
+        a1.preview_text = 'eat less'
+        a1.author = nata
+        a1.save()
+        Article.objects.create(title='Второе название',
                                text='second article text, more interesting',
                                preview_text='interesting',
                                author=nata,

@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
-from django.utils import timezone
+from transliterate import slugify
+
 import os
 
 
@@ -11,11 +11,18 @@ class Article(models.Model):
     text = models.TextField()
     preview_text = models.TextField()
     author = models.ForeignKey(User)
-    creation_date = models.DateTimeField(default=timezone.now())
+    creation_date = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)
+    url_alias = models.SlugField()
 
     teaser_image = models.ImageField(upload_to="teaser-images",
                                      blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            # Only set the slug when the object is created.
+            self.url_alias = slugify(self.title, language_code='ru')
+        super(Article, self).save(*args, **kwargs)
 
 
 # @receiver(pre_delete, sender=Article)

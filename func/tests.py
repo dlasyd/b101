@@ -13,7 +13,7 @@ class FunctionalTests(StaticLiveServerTestCase):
         u1 = User.objects.first()
 
         self.article1 = Article()
-        self.article1.title = 'Start your own wending business'
+        self.article1.title = 'Начни свой бизнес в сфере вендинга'
         self.article1.text = 'Wending machines are easy to maintain and they will make a lot of money'
         self.article1.preview_text = 'This is preview text'
         self.article1.author = u1

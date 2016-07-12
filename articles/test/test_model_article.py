@@ -32,7 +32,7 @@ class ArticleModelTest(TestCase):
         self.assertEqual(1, Article.objects.count())
         self.assertIsNotNone(article.creation_date)
         self.assertFalse(article.is_published)
-        # self.assertEqual(article.url_alias, 'staia-dlya-testa')
+        self.assertEqual('statja-dlja-testa', article.url_alias)
 
         if os.path.isfile(article.teaser_image.path):
             os.remove(article.teaser_image.path)
@@ -49,3 +49,14 @@ class ArticleModelTest(TestCase):
 
         self.assertEqual(1, Article.objects.count())
 
+    def test_create_article_with_mixed_language_title(self):
+        User.objects.create()
+        u1 = User.objects.first()
+        Article.objects.create(title='Статья для hello',
+                               text='<p>Full text of article, containing html</p>',
+                               preview_text='This is preview text',
+                               author=u1,
+                               )
+
+        article = Article.objects.first()
+        self.assertEqual('statja-dlja-hello', article.url_alias)
