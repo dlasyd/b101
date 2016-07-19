@@ -1,6 +1,6 @@
 from selenium import webdriver
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from articles.models import Article
+from articles.models import Article, Category
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.utils import timezone
@@ -12,11 +12,15 @@ class FunctionalTests(StaticLiveServerTestCase):
         User.objects.create()
         u1 = User.objects.first()
 
+        Category.objects.create(name='Тестовые статьи')
+        cat1 = Category.objects.first()
+
         self.article1 = Article()
         self.article1.title = 'Начни свой бизнес в сфере вендинга'
         self.article1.text = 'Wending machines are easy to maintain and they will make a lot of money'
         self.article1.preview_text = 'This is preview text'
         self.article1.author = u1
+        self.article1.category = cat1
         self.article1.creation_date = timezone.now()
         self.article1.save()
 
@@ -28,6 +32,7 @@ class FunctionalTests(StaticLiveServerTestCase):
         self.article2.text = 'Where to get them'
         self.article2.preview_text = 'This is preview text'
         self.article2.author = u1
+        self.article2.category = cat1
         self.article2.creation_date = timezone.now()
         self.article2.save()
 

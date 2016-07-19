@@ -14,15 +14,27 @@ class Article(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)
     url_alias = models.SlugField()
-
     teaser_image = models.ImageField(upload_to="teaser-images",
                                      blank=True)
+    category = models.ForeignKey('Category', on_delete=None)
 
     def save(self, *args, **kwargs):
         if not self.id:
             # Only set the slug when the object is created.
             self.url_alias = slugify(self.title, language_code='ru')
         super(Article, self).save(*args, **kwargs)
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+    url_alias = models.SlugField()
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            # Only set the slug when the object is created.
+            self.url_alias = slugify(self.name, language_code='ru')
+        super(Category, self).save(*args, **kwargs)
+
 
 
 # @receiver(pre_delete, sender=Article)

@@ -5,22 +5,24 @@ from django.core.files import File
 from django.test import TestCase
 from django.utils import timezone
 
-from articles.models import Article
+from articles.models import Article, Category
 
 
 class ArticleModelTest(TestCase):
-    def test_create_article(self):
-
-        author1 = User('john', 'lennon@thebeatles.com', 'johnpassword')
+    def setUp(self):
+        Category.objects.create(name="разное")
+        self.cat1 = Category.objects.first()
         User.objects.create()
-        u1 = User.objects.first()
+        self.u1 = User.objects.first()
+
+    def test_create_article(self):
 
         Article.objects.create(title='Статья для теста',
                                text='<p>Full text of article, containing html</p>',
                                preview_text='This is preview text',
-                               author=u1,
+                               author=self.u1,
                                creation_date=timezone.now(),
-                               # category='?other table',
+                               category=self.cat1
                                # url_alias='?other table',
                                # tags='?other table legacy tags'
                                )
@@ -38,24 +40,21 @@ class ArticleModelTest(TestCase):
             os.remove(article.teaser_image.path)
 
     def test_create_without_date_and_image(self):
-        User.objects.create()
-        u1 = User.objects.first()
-
         Article.objects.create(title='Статья для теста',
                                text='<p>Full text of article, containing html</p>',
                                preview_text='This is preview text',
-                               author=u1,
+                               author=self.u1,
+                               category=self.cat1
                                )
 
         self.assertEqual(1, Article.objects.count())
 
     def test_create_article_with_mixed_language_title(self):
-        User.objects.create()
-        u1 = User.objects.first()
         Article.objects.create(title='Статья для hello',
                                text='<p>Full text of article, containing html</p>',
                                preview_text='This is preview text',
-                               author=u1,
+                               author=self.u1,
+                               category=self.cat1
                                )
 
         article = Article.objects.first()

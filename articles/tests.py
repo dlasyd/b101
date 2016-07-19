@@ -4,22 +4,28 @@ from django.core.files import File
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from .models import Article
+from .models import Article, Category
 
 
 class ArticleTest(TestCase):
     def setUp(self):
         User.objects.create()
         nata = User.objects.first()
+
+        Category.objects.create(name='Бизнес в Твери')
+        cat = Category.objects.first()
+
         Article.objects.create(title='first title',
                                text='low carb diet helps weight loss',
                                preview_text='eat less',
-                               author=nata)
+                               author=nata,
+                               category=cat)
         Article.objects.create(title='Второе название',
                                text='second article text, more interesting',
                                preview_text='interesting',
                                author=nata,
-                               is_published=True)
+                               is_published=True,
+                               category=cat)
         self.response = self.client.get('/')
         self.single_article = self.client.get('/article/first-title')
 
