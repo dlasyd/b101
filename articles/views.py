@@ -7,6 +7,6 @@ def article_list(request):
     return render(request, 'articles/article-list.html', {'articles': articles})
 
 
-def single_article(request, id):
-    article = get_object_or_404(Article, id=id)
+def single_article(request, url_alias):
+    article = get_object_or_404(Article, url_alias=url_alias)
     return render(request, 'articles/single-article.html', {'article': article})

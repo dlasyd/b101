@@ -45,7 +45,7 @@ class FunctionalTests(StaticLiveServerTestCase):
         assert self.article1.teaser_image.url in self.browser.page_source
         # user clicks on first article title
         self.browser.find_element_by_link_text(self.article1.title).click()
-        self.assertEqual(self.browser.current_url, self.live_server_url + '/article/1')
+        self.assertEqual(self.browser.current_url, self.live_server_url + '/article/nachni-svoj-biznes-v-sfere-vendinga')
 
         assert self.article1.title in self.browser.title
         assert self.article1.text in self.browser.page_source
@@ -53,7 +53,7 @@ class FunctionalTests(StaticLiveServerTestCase):
         self.browser.execute_script("window.history.go(-1)")
 
         self.browser.find_element_by_link_text(self.article2.title).click()
-        self.assertEqual(self.browser.current_url, self.live_server_url + '/article/2')
+        self.assertEqual(self.browser.current_url, self.live_server_url + '/article/start-up-money')
 
         assert self.article2.title in self.browser.title
         assert self.article2.text in self.browser.page_source

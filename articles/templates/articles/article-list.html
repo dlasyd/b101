@@ -1,7 +1,7 @@
 {% extends "articles/basic.html" %}
 {% block content %}
     {% for article in articles %}
-        <h2><a href="{% url 'article-view' article.id %}" class="title-link">{{ article.title }}</a></h2>
+        <h2><a href="{% url 'article-view' article.url_alias %}" class="title-link">{{ article.title }}</a></h2>
         <p>{{ article.creation_date|date:"l, d F" }}</p>
         {% if article.teaser_image %}
             <img width="50%" height="50%" src="{{ article.teaser_image.url }}"/>

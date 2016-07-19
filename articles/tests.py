@@ -11,23 +11,17 @@ class ArticleTest(TestCase):
     def setUp(self):
         User.objects.create()
         nata = User.objects.first()
-        # Article.objects.create(title='first title',
-        #                        text='low carb diet helps weight loss',
-        #                        preview_text='eat less',
-        #                        author=nata)
-        a1 = Article()
-        a1.title = 'Первое название'
-        a1.text = 'low carb diet helps weight loss'
-        a1.preview_text = 'eat less'
-        a1.author = nata
-        a1.save()
+        Article.objects.create(title='first title',
+                               text='low carb diet helps weight loss',
+                               preview_text='eat less',
+                               author=nata)
         Article.objects.create(title='Второе название',
                                text='second article text, more interesting',
                                preview_text='interesting',
                                author=nata,
                                is_published=True)
         self.response = self.client.get('/')
-        self.single_article = self.client.get('/article/1')
+        self.single_article = self.client.get('/article/first-title')
 
     def test_front_page_has_correct_template(self):
         self.assertEqual(self.response.status_code, 200)
@@ -57,6 +51,6 @@ class ArticleTest(TestCase):
         self.assertEquals(Article.objects.get(id=1), self.single_article.context['article'])
 
     def test_single_page_view_id_url(self):
-        r = self.client.get('/article/2')
+        r = self.client.get('/article/vtoroe-nazvanie')
         self.assertEqual(r.status_code, 200)
         self.assertEquals(Article.objects.get(id=2), r.context['article'])
