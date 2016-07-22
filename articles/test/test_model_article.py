@@ -23,7 +23,6 @@ class ArticleModelTest(TestCase):
                                author=self.u1,
                                creation_date=timezone.now(),
                                category=self.cat1
-                               # url_alias='?other table',
                                # tags='?other table legacy tags'
                                )
 
