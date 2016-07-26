@@ -63,3 +63,10 @@ class FunctionalTests(StaticLiveServerTestCase):
         assert self.article2.title in self.browser.title
         assert self.article2.text in self.browser.page_source
 
+    def test_logo_in_top_left_is_a_link(self):
+        homepage = self.live_server_url
+        self.browser.get(homepage + '/article/nachni-svoj-biznes-v-sfere-vendinga')
+        self.browser.find_element_by_id("logo").click()
+
+        self.assertEquals(homepage + '/', self.browser.current_url)
+
