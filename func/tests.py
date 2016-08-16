@@ -36,6 +36,17 @@ class FunctionalTests(StaticLiveServerTestCase):
         self.article2.creation_date = timezone.now()
         self.article2.save()
 
+        # why doesn't article.objects.create work here?
+        legacy_article = Article()
+        legacy_article.title = 'Legacy article example'
+        legacy_article.text = 'Used to have lenta in url. Where to get them'
+        legacy_article.preview_text = 'This very legacy'
+        legacy_article.author = u1
+        legacy_article.category = cat1
+        legacy_article.creation_date = timezone.now()
+        legacy_article.legacy = True
+        legacy_article.save()
+
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
@@ -70,3 +81,8 @@ class FunctionalTests(StaticLiveServerTestCase):
 
         self.assertEquals(homepage + '/', self.browser.current_url)
 
+    def test_legacy_article_redirects_to_correct_article(self):
+        homepage = self.live_server_url
+        self.browser.get(homepage + '/lenta/legacy-article-example')
+        expected_url = homepage + '/article/legacy-article-example'
+        self.assertEqual(expected_url, self.browser.current_url)

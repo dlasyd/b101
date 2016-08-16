@@ -1,5 +1,6 @@
 .idea/dataSources.local.xml
 .idea/workspace.xml
+.idea/dictionaries
 articles/__init__.pyc
 articles/__pycache__/
 articles/admin.pyc
@@ -10,3 +11,5 @@ b111/__pycache__/
 b111/settings.pyc
 media/
 templates/
+legacy/__pycache__/
+legacy/migrations/__pycache__/

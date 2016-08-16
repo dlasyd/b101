@@ -18,9 +18,11 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
 from articles.views import article_list, single_article
+from legacy.views import legacy_redirect
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', article_list, name='article-list'),
-    url(r'^article/(?P<url_alias>[a-zA-Z0-9+-]+)$', single_article, name='article-view')
+    url(r'^article/(?P<url_alias>[a-zA-Z0-9+-]+)$', single_article, name='article-view'),
+    url(r'^lenta/(?P<legacy_url>[a-zA-Z0-9+-]+)$', legacy_redirect, name='legacy-redirect')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

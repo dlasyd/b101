@@ -17,6 +17,7 @@ class Article(models.Model):
     teaser_image = models.ImageField(upload_to="teaser-images",
                                      blank=True)
     category = models.ForeignKey('Category', on_delete=None)
+    legacy = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -34,7 +35,6 @@ class Category(models.Model):
             # Only set the slug when the object is created.
             self.url_alias = slugify(self.name, language_code='ru')
         super(Category, self).save(*args, **kwargs)
-
 
 
 # @receiver(pre_delete, sender=Article)

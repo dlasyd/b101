@@ -4,7 +4,7 @@ from django.core.files import File
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from .models import Article, Category
+from articles.models import Article, Category
 
 
 class ArticleTest(TestCase):
@@ -60,3 +60,6 @@ class ArticleTest(TestCase):
         r = self.client.get('/article/vtoroe-nazvanie')
         self.assertEqual(r.status_code, 200)
         self.assertEquals(Article.objects.get(id=2), r.context['article'])
+
+    def test_legacy_article_redirects_to_new(self):
+        pass
