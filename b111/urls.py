@@ -17,8 +17,7 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
-from articles.views import article_list, single_article
-from legacy.views import legacy_redirect
+from articles.views import article_list, single_article, legacy_redirect
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
