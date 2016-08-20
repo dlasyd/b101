@@ -18,6 +18,7 @@ class Article(models.Model):
                                      blank=True)
     category = models.ForeignKey('Category', on_delete=None)
     legacy = models.BooleanField(default=False)
+    tags = models.ManyToManyField('Tag', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -35,6 +36,10 @@ class Category(models.Model):
             # Only set the slug when the object is created.
             self.url_alias = slugify(self.name, language_code='ru')
         super(Category, self).save(*args, **kwargs)
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50)
 
 
 # @receiver(pre_delete, sender=Article)
