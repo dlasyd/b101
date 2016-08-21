@@ -26,3 +26,5 @@ urlpatterns = [
     url(r'^lenta/(?P<legacy_url>[a-zA-Z0-9+-]+)$', legacy_redirect, name='legacy-redirect'),
     url(r'^topic/(?P<category>[a-zA-Z0-9+-]+)$', category, name='category')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.site.site_header = "Управление сайтом Business101.ru"

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import receiver
 from transliterate import slugify
+from django.core.urlresolvers import reverse
 
 import os
 
@@ -26,6 +27,12 @@ class Article(models.Model):
             self.url_alias = slugify(self.title, language_code='ru')
         super(Article, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.title + ' ' + self.category.name
+
+    def get_absolute_url(self):
+        return reverse('article-view', args=[self.url_alias])
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -37,9 +44,15 @@ class Category(models.Model):
             self.url_alias = slugify(self.name, language_code='ru')
         super(Category, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
 
 
 # @receiver(pre_delete, sender=Article)
