@@ -12,7 +12,7 @@ class ArticleTest(TestCase):
         User.objects.create()
         nata = User.objects.first()
 
-        Category.objects.create(name='Бизнес в Твери')
+        Category.objects.create(name='идеи бизнеса')
         cat = Category.objects.first()
 
         Article.objects.create(title='first title',
@@ -25,7 +25,8 @@ class ArticleTest(TestCase):
                                preview_text='interesting',
                                author=nata,
                                is_published=True,
-                               category=cat)
+                               category=cat,
+                               legacy=True)
         self.response = self.client.get('/')
         self.single_article = self.client.get('/article/first-title')
 
@@ -61,5 +62,24 @@ class ArticleTest(TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertEquals(Article.objects.get(id=2), r.context['article'])
 
-    def test_legacy_article_redirects_to_new(self):
-        pass
+    def test_redirect_on_lenta_url_to_article(self):
+
+        response = self.client.get('/lenta/vtoroe-nazvanie')
+        self.assertRedirects(response,
+                             expected_url='/article/vtoroe-nazvanie',
+                             status_code=301,
+                             target_status_code=200)
+
+    def test_no_redirect_if_article_does_not_exist(self):
+        response = self.client.get('/article/first-title')
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get('/lenta/first-title')
+        self.assertEqual(response.status_code, 404)
+
+    def test_category_has_url_alias(self):
+        r = self.client.get('/topic/idei-biznesa')
+        self.assertEqual(r.status_code, 200)
+
+    def test_category_has_correct_template(self):
+        r = self.client.get('/topic/idei-biznesa')
+        self.assertTemplateUsed(r, 'articles/category.html')
