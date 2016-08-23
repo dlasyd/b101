@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.files import File
 from django.test import TestCase
 from django.utils import timezone
+from django.db import IntegrityError
 
 from articles.models import Article, Category
 
@@ -23,7 +24,6 @@ class ArticleModelTest(TestCase):
                                author=self.u1,
                                creation_date=timezone.now(),
                                category=self.cat1
-                               # tags='?other table legacy tags'
                                )
 
         article = Article.objects.first()
@@ -58,3 +58,37 @@ class ArticleModelTest(TestCase):
 
         article = Article.objects.first()
         self.assertEqual('statja-dlja-hello', article.url_alias)
+
+    def test_can_set_article_alias(self):
+        article = Article()
+        article.title = 'title'
+        article.text = '<p> full text of the article <p>'
+        article.preview_text = 'preview'
+        article.author = self.u1
+        article.category = self.cat1
+        article.url_alias = 'custom-alias'
+        article.save()
+
+        self.assertEqual(article.url_alias, 'custom-alias')
+
+    def test_alias_should_be_unique(self):
+        a1 = Article()
+        a1.title = 'title'
+        a1.text = '<p> full text of the article <p>'
+        a1.preview_text = 'preview'
+        a1.author = self.u1
+        a1.category = self.cat1
+        a1.save()
+
+        with self.assertRaises(IntegrityError):
+            a2 = Article()
+            a2.title = 'title'
+            a2.text = '<p> full text of the article <p>'
+            a2.preview_text = 'preview'
+            a2.author = self.u1
+            a2.category = self.cat1
+            a2.save()
+
+
+
+

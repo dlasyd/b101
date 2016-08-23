@@ -76,7 +76,7 @@ class ArticleTest(TestCase):
         response = self.client.get('/lenta/first-title')
         self.assertEqual(response.status_code, 404)
 
-    def test_category_has_url_alias(self):
+    def test_category_has_url_address(self):
         r = self.client.get('/topic/idei-biznesa')
         self.assertEqual(r.status_code, 200)
 

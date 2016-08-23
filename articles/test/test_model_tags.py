@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
+from django.db import IntegrityError
 
 from articles.models import Article, Tag, Category
 
@@ -34,3 +35,9 @@ class TagModelTest(TestCase):
         self.article.tags.add(tag2)
         self.assertEqual(self.article.tags.get(pk=tag1.pk), tag1)
         self.assertEqual(self.article.tags.get(pk=tag2.pk), tag2)
+
+    def test_tag_name_should_be_unique(self):
+        Tag.objects.create(name="investing")
+        with self.assertRaises(IntegrityError):
+            Tag.objects.create(name="investing")
+

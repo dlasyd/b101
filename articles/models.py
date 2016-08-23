@@ -14,7 +14,7 @@ class Article(models.Model):
     author = models.ForeignKey(User)
     creation_date = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)
-    url_alias = models.SlugField()
+    url_alias = models.SlugField(unique=True)
     teaser_image = models.ImageField(upload_to="teaser-images",
                                      blank=True)
     category = models.ForeignKey('Category', on_delete=None)
@@ -22,8 +22,9 @@ class Article(models.Model):
     tags = models.ManyToManyField('Tag', blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            # Only set the slug when the object is created.
+        if not self.id and not self.url_alias:
+            # Only set the slug when the object is created
+            # and url_alias is empty
             self.url_alias = slugify(self.title, language_code='ru')
         super(Article, self).save(*args, **kwargs)
 
@@ -35,11 +36,11 @@ class Article(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50)
-    url_alias = models.SlugField()
+    name = models.CharField(max_length=50, unique=True)
+    url_alias = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        if not self.id:
+        if not self.id and not self.url_alias:
             # Only set the slug when the object is created.
             self.url_alias = slugify(self.name, language_code='ru')
         super(Category, self).save(*args, **kwargs)
@@ -49,7 +50,7 @@ class Category(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
