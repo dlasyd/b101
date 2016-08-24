@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import receiver
+from django.utils import timezone
 from transliterate import slugify
 from django.core.urlresolvers import reverse
 
@@ -13,6 +14,7 @@ class Article(models.Model):
     preview_text = models.TextField()
     author = models.ForeignKey(User)
     creation_date = models.DateTimeField(auto_now_add=True)
+    published_date = models.DateTimeField(blank=True, null=True)
     is_published = models.BooleanField(default=False)
     url_alias = models.SlugField(unique=True)
     teaser_image = models.ImageField(upload_to="teaser-images",
@@ -26,6 +28,11 @@ class Article(models.Model):
             # Only set the slug when the object is created
             # and url_alias is empty
             self.url_alias = slugify(self.title, language_code='ru')
+        if self.id:
+            if self.published_date is None:
+                orig = Article.objects.get(id=self.id)
+                if (orig.is_published != self.is_published) & self.is_published is True:
+                    self.published_date = timezone.now()
         super(Article, self).save(*args, **kwargs)
 
     def __str__(self):

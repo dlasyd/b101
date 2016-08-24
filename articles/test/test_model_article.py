@@ -16,37 +16,35 @@ class ArticleModelTest(TestCase):
         User.objects.create()
         self.u1 = User.objects.first()
 
+        Article.objects.create(title='Статья для теста',
+                               text='<p>Full text of article, containing html</p>',
+                               preview_text='This is preview text',
+                               author=self.u1,
+                               category=self.cat1
+                               )
+        self.article = Article.objects.last()
+
     def test_create_article(self):
 
-        Article.objects.create(title='Статья для теста',
-                               text='<p>Full text of article, containing html</p>',
-                               preview_text='This is preview text',
-                               author=self.u1,
-                               creation_date=timezone.now(),
-                               category=self.cat1
-                               )
-
-        article = Article.objects.first()
         with open('articles/test/resources/test_teaser.jpg', 'rb') as image:
-            article.teaser_image.save('test_teaser.jpg', File(image), save=True)
+            self.article.teaser_image.save('test_teaser.jpg', File(image), save=True)
 
-        self.assertEqual(1, Article.objects.count())
-        self.assertIsNotNone(article.creation_date)
-        self.assertFalse(article.is_published)
-        self.assertEqual('statja-dlja-testa', article.url_alias)
+        self.assertIsNotNone(self.article.creation_date)
+        self.assertFalse(self.article.is_published)
+        self.assertEqual('statja-dlja-testa', self.article.url_alias)
 
-        if os.path.isfile(article.teaser_image.path):
-            os.remove(article.teaser_image.path)
+        if os.path.isfile(self.article.teaser_image.path):
+            os.remove(self.article.teaser_image.path)
 
     def test_create_without_date_and_image(self):
-        Article.objects.create(title='Статья для теста',
+        Article.objects.create(title='Статья без даты и картинки',
                                text='<p>Full text of article, containing html</p>',
                                preview_text='This is preview text',
                                author=self.u1,
                                category=self.cat1
                                )
 
-        self.assertEqual(1, Article.objects.count())
+        self.assertNotEqual(Article.objects.last().creation_date, None)
 
     def test_create_article_with_mixed_language_title(self):
         Article.objects.create(title='Статья для hello',
@@ -56,7 +54,7 @@ class ArticleModelTest(TestCase):
                                category=self.cat1
                                )
 
-        article = Article.objects.first()
+        article = Article.objects.last()
         self.assertEqual('statja-dlja-hello', article.url_alias)
 
     def test_can_set_article_alias(self):
@@ -89,6 +87,30 @@ class ArticleModelTest(TestCase):
             a2.category = self.cat1
             a2.save()
 
+    def test_can_set_publish_date(self):
+        Article.objects.create(title='Тест статьи с датой публикации',
+                               text='<p>Full text of article, containing html</p>',
+                               preview_text='This is preview text',
+                               author=self.u1,
+                               creation_date=timezone.now(),
+                               category=self.cat1,
+                               published_date=timezone.now()
+                               )
+        self.assertNotEqual(Article.objects.last(), None)
+
+    def test_when_published_is_set_to_true_publication_is_now(self):
+        self.article.is_published = True
+        self.article.save()
+        time_pub = self.article.published_date
+        self.assertNotEqual(time_pub, None)
+
+        self.article.is_published = False
+        self.article.save()
+        self.assertEqual(self.article.published_date, time_pub)
+
+        self.article.is_published = True
+        self.article.save()
+        self.assertEqual(self.article.published_date, time_pub)
 
 
 
