@@ -5,6 +5,7 @@ from .models import Article, Category, Tag
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('title',)
+    filter_horizontal = ('tags', )
 
 
 @admin.register(Category)
