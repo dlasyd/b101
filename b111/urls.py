@@ -20,7 +20,7 @@ from django.contrib import admin
 from articles.views import article_list, single_article, legacy_redirect, category
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^editor/', admin.site.urls),
     url(r'^$', article_list, name='article-list'),
     url(r'^article/(?P<url_alias>[a-zA-Z0-9+-]+)$', single_article, name='article-view'),
     url(r'^lenta/(?P<legacy_url>[a-zA-Z0-9+-]+)$', legacy_redirect, name='legacy-redirect'),
