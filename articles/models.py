@@ -24,15 +24,18 @@ class Article(models.Model):
     tags = models.ManyToManyField('Tag', blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.id and not self.url_alias:
-            # Only set the slug when the object is created
-            # and url_alias is empty
-            self.url_alias = slugify(self.title, language_code='ru')
         if self.id:
             if self.published_date is None:
                 orig = Article.objects.get(id=self.id)
                 if (orig.is_published != self.is_published) & self.is_published is True:
                     self.published_date = timezone.now()
+        else:
+            if not self.url_alias:
+                self.url_alias = slugify(self.title, language_code='ru')
+
+            if self.published_date is None:
+                self.published_date = timezone.now()
+
         super(Article, self).save(*args, **kwargs)
 
     def __str__(self):
