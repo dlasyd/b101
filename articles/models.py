@@ -1,39 +1,44 @@
+import os
+
+from transliterate import slugify
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import receiver
 from django.utils import timezone
-from transliterate import slugify
 from django.core.urlresolvers import reverse
-
-import os
 
 
 class Article(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey(User)
     preview_text = models.TextField()
+
     text = models.TextField()
     creation_date = models.DateTimeField(auto_now_add=True)
     published_date = models.DateTimeField(blank=True, null=True)
-    is_published = models.BooleanField(default=False)
+
+    state = models.CharField(default=1,
+                             choices=(('1', "Not Published"), ('2', "Staged for publication"), ('3', "Published")),
+                             max_length=1,)
+    category = models.ForeignKey('Category', on_delete=None)
+
+    tags = models.ManyToManyField('Tag', blank=True)
     url_alias = models.SlugField(unique=True, blank=True)
+
+    legacy = models.BooleanField(default=False)
+
     teaser_image = models.ImageField(upload_to="teaser-images",
                                      blank=True)
-    category = models.ForeignKey('Category', on_delete=None)
-    legacy = models.BooleanField(default=False)
-    tags = models.ManyToManyField('Tag', blank=True)
 
     def save(self, *args, **kwargs):
-        if self.id:
-            if self.published_date is None:
-                orig = Article.objects.get(id=self.id)
-                if (orig.is_published != self.is_published) and self.is_published is True:
-                    self.published_date = timezone.now()
+        if self.id and self.published_date is None and self.state == '3':
+            self.published_date = timezone.now()
         else:
             if not self.url_alias:
                 self.url_alias = slugify(self.title, language_code='ru')[0:50]
 
-            if self.published_date is None and self.is_published is True:
+            if self.published_date is None and self.state == '3':
                 self.published_date = timezone.now()
 
         super(Article, self).save(*args, **kwargs)

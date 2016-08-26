@@ -14,14 +14,12 @@ class LentaTest(TestCase):
                                text='second article text, more interesting',
                                preview_text='interesting',
                                author=nata,
-                               is_published=True,
                                category=cat)
 
         Article.objects.create(title='legacy-article',
                                text='second article text, more interesting',
                                preview_text='interesting',
                                author=nata,
-                               is_published=True,
                                category=cat,
                                legacy=True)
 

@@ -5,7 +5,6 @@ from django.core.files import File
 from django.test import TestCase
 from django.utils import timezone
 from django.db import IntegrityError
-import datetime
 
 from articles.models import Article, Category
 
@@ -31,7 +30,6 @@ class ArticleModelTest(TestCase):
             self.article.teaser_image.save('test_teaser.jpg', File(image), save=True)
 
         self.assertIsNotNone(self.article.creation_date)
-        self.assertFalse(self.article.is_published)
         self.assertEqual('statja-dlja-testa', self.article.url_alias)
 
         if os.path.isfile(self.article.teaser_image.path):
@@ -111,23 +109,23 @@ class ArticleModelTest(TestCase):
                                )
         self.assertNotEqual(Article.objects.last(), None)
 
-    def test_when_published_is_set_to_true_publication_is_now(self):
-        self.article.is_published = True
+    def test_when_status_is_set_to_published_publication_is_now(self):
+        self.article.state = '3'
         self.article.save()
         time_pub = self.article.published_date
         self.assertNotEqual(time_pub, None)
 
-        self.article.is_published = False
+        self.article.state = '1'
         self.article.save()
         self.assertEqual(self.article.published_date, time_pub)
 
-        self.article.is_published = True
+        self.article.state = '3'
         self.article.save()
         self.assertEqual(self.article.published_date, time_pub)
 
     def test_new_article_is_published_sets_publish_date(self):
         Article.objects.create(title='Опубликованная сразу статья',
-                               is_published=True,
+                               state='3',
                                text='<p>Full text of article, containing html</p>',
                                preview_text='This is preview text',
                                author=self.u1,
@@ -148,17 +146,3 @@ class ArticleModelTest(TestCase):
 
         self.assertEqual(Article.objects.last().published_date, None)
 
-    def test_new_article_is_published_with_set_publish_date_does_not_override_date(self):
-        yesterday = timezone.now() - datetime.timedelta(days=1)
-
-        Article.objects.create(title='Опубликованная статья с датой публикации',
-                               is_published=True,
-                               text='<p>Full text of article, containing html</p>',
-                               preview_text='This is preview text',
-                               author=self.u1,
-                               creation_date=timezone.now(),
-                               category=self.cat1,
-                               published_date=yesterday
-                               )
-
-        self.assertEqual(Article.objects.last().published_date, yesterday)
