@@ -58,6 +58,18 @@ class ArticleModelTest(TestCase):
         article = Article.objects.last()
         self.assertEqual('statja-dlja-hello', article.url_alias)
 
+    def test_alias_size_constrains(self):
+
+        Article.objects.create(title='Очень очень приочень длинное придлинное название статьи для сайта',
+                               text='<p>Full text of article, containing html</p>',
+                               preview_text='This is preview text',
+                               author=self.u1,
+                               category=self.cat1
+                               )
+
+        article = Article.objects.last()
+        self.assertEqual('ochen-ochen-priochen-dlinnoe-pridlinnoe-nazvanie-s', article.url_alias)
+
     def test_can_set_article_alias(self):
         article = Article()
         article.title = 'title'
@@ -125,6 +137,17 @@ class ArticleModelTest(TestCase):
 
         self.assertNotEqual(Article.objects.last().published_date, None)
 
+    def test_new_article_not_published_does_not_set_date(self):
+        Article.objects.create(title='Не опубликованная сразу статья',
+                               text='<p>Full text of article, containing html</p>',
+                               preview_text='This is preview text',
+                               author=self.u1,
+                               creation_date=timezone.now(),
+                               category=self.cat1,
+                               )
+
+        self.assertEqual(Article.objects.last().published_date, None)
+
     def test_new_article_is_published_with_set_publish_date_does_not_override_date(self):
         yesterday = timezone.now() - datetime.timedelta(days=1)
 
@@ -139,4 +162,3 @@ class ArticleModelTest(TestCase):
                                )
 
         self.assertEqual(Article.objects.last().published_date, yesterday)
-

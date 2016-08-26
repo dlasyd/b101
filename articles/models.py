@@ -10,13 +10,13 @@ import os
 
 class Article(models.Model):
     title = models.CharField(max_length=200)
-    text = models.TextField()
-    preview_text = models.TextField()
     author = models.ForeignKey(User)
+    preview_text = models.TextField()
+    text = models.TextField()
     creation_date = models.DateTimeField(auto_now_add=True)
     published_date = models.DateTimeField(blank=True, null=True)
     is_published = models.BooleanField(default=False)
-    url_alias = models.SlugField(unique=True)
+    url_alias = models.SlugField(unique=True, blank=True)
     teaser_image = models.ImageField(upload_to="teaser-images",
                                      blank=True)
     category = models.ForeignKey('Category', on_delete=None)
@@ -27,13 +27,13 @@ class Article(models.Model):
         if self.id:
             if self.published_date is None:
                 orig = Article.objects.get(id=self.id)
-                if (orig.is_published != self.is_published) & self.is_published is True:
+                if (orig.is_published != self.is_published) and self.is_published is True:
                     self.published_date = timezone.now()
         else:
             if not self.url_alias:
-                self.url_alias = slugify(self.title, language_code='ru')
+                self.url_alias = slugify(self.title, language_code='ru')[0:50]
 
-            if self.published_date is None:
+            if self.published_date is None and self.is_published is True:
                 self.published_date = timezone.now()
 
         super(Article, self).save(*args, **kwargs)
