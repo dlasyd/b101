@@ -1,0 +1,2 @@
+Django==1.8.0
+transliterate==1.7.6
