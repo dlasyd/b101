@@ -20,12 +20,16 @@ class ArticleTest(TestCase):
                                preview_text='eat less',
                                author=nata,
                                category=cat)
+        self.firstArticle = Article.objects.last()
+
         Article.objects.create(title='Второе название',
                                text='second article text, more interesting',
                                preview_text='interesting',
                                author=nata,
                                category=cat,
                                legacy=True)
+        self.secondArticle = Article.objects.last()
+
         self.response = self.client.get('/')
         self.single_article = self.client.get('/article/first-title')
 
@@ -54,12 +58,12 @@ class ArticleTest(TestCase):
         self.assertTemplateUsed(self.single_article, 'articles/single-article.html')
 
     def test_single_page_contains_article(self):
-        self.assertEquals(Article.objects.get(id=1), self.single_article.context['article'])
+        self.assertEquals(self.firstArticle, self.single_article.context['article'])
 
     def test_single_page_view_id_url(self):
         r = self.client.get('/article/vtoroe-nazvanie')
         self.assertEqual(r.status_code, 200)
-        self.assertEquals(Article.objects.get(id=2), r.context['article'])
+        self.assertEquals(self.secondArticle, r.context['article'])
 
     def test_redirect_on_lenta_url_to_article(self):
 
