@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 
 class Article(models.Model):
     title = models.CharField(max_length=200)
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(User, editable=False)
     preview_text = models.TextField()
 
     text = models.TextField()
