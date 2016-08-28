@@ -10,3 +10,6 @@ b111/settings.pyc
 media/
 legacy/__pycache__/
 legacy/migrations/__pycache__/
+articles/test/__pycache__/
+database.json
+templates/
