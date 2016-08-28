@@ -30,7 +30,7 @@ class ArticleModelTest(TestCase):
             self.article.teaser_image.save('test_teaser.jpg', File(image), save=True)
 
         self.assertIsNotNone(self.article.creation_date)
-        self.assertEqual('statja-dlja-testa', self.article.url_alias)
+        self.assertEqual('statja-dlja-testa', self.article.slug)
 
         if os.path.isfile(self.article.teaser_image.path):
             os.remove(self.article.teaser_image.path)
@@ -54,7 +54,7 @@ class ArticleModelTest(TestCase):
                                )
 
         article = Article.objects.last()
-        self.assertEqual('statja-dlja-hello', article.url_alias)
+        self.assertEqual('statja-dlja-hello', article.slug)
 
     def test_alias_size_constrains(self):
 
@@ -66,7 +66,7 @@ class ArticleModelTest(TestCase):
                                )
 
         article = Article.objects.last()
-        self.assertEqual('ochen-ochen-priochen-dlinnoe-pridlinnoe-nazvanie-s', article.url_alias)
+        self.assertEqual('ochen-ochen-priochen-dlinnoe-pridlinnoe-nazvanie-s', article.slug)
 
     def test_can_set_article_alias(self):
         article = Article()
@@ -75,10 +75,10 @@ class ArticleModelTest(TestCase):
         article.preview_text = 'preview'
         article.author = self.u1
         article.category = self.cat1
-        article.url_alias = 'custom-alias'
+        article.slug = 'custom-alias'
         article.save()
 
-        self.assertEqual(article.url_alias, 'custom-alias')
+        self.assertEqual(article.slug, 'custom-alias')
 
     def test_alias_should_be_unique(self):
         a1 = Article()

@@ -9,7 +9,6 @@ from .models import Article, Category
 class ArticleDetailed(DetailView):
     model = Article
     template_name = 'articles/article-detailed.html'
-    slug_field = 'url_alias'
 
 
 class CategoryList(ListView):
@@ -17,7 +16,7 @@ class CategoryList(ListView):
     context_object_name = 'articles'
 
     def get_queryset(self):
-        self.cat = get_object_or_404(Category, url_alias=self.kwargs['slug'])
+        self.cat = get_object_or_404(Category, slug=self.kwargs['slug'])
         return get_list_or_404(Article.objects.filter(category=self.cat))
 
     def get_context_data(self, **kwargs):
@@ -32,9 +31,9 @@ class AllArticlesList(ListView):
     context_object_name = 'articles'
 
 
-def legacy_redirect(request, legacy_url):
-    article = get_object_or_404(Article, url_alias=legacy_url)
+def legacy_redirect(request, slug):
+    article = get_object_or_404(Article, slug=slug)
     if article.legacy:
-        return redirect('article-view', slug=legacy_url, permanent=True)
+        return redirect('article-view', slug=slug, permanent=True)
     else:
         raise Http404("Article does not exist")

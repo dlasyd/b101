@@ -23,7 +23,7 @@ from articles.views import legacy_redirect, ArticleDetailed, CategoryList, AllAr
 urlpatterns = [
     url(r'^editor/', admin.site.urls),
     url(r'^$', AllArticlesList.as_view(), name='article-list'),
-    url(r'^lenta/(?P<legacy_url>[-\w]+)$', legacy_redirect, name='legacy-redirect'),
+    url(r'^lenta/(?P<slug>[-\w]+)$', legacy_redirect, name='legacy-redirect'),
     url(r'^article/(?P<slug>[-\w]+)$', ArticleDetailed.as_view(), name='article-view'),
     url(r'^topic/(?P<slug>[-\w]+)$', CategoryList.as_view(), name='category')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
