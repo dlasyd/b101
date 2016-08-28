@@ -43,10 +43,8 @@ class ArticleTest(TestCase):
             article.teaser_image.save('test_teaser.jpg', File(image), save=True)
         self.response = self.client.get('/')
 
-        self.assertEqual(self.response.context['object_list'][0], Article.objects.all()[0])
         self.assertContains(self.response, Article.objects.first().teaser_image.url)
         self.assertContains(self.response, Article.objects.first().preview_text)
-        # self.assertListEqual(self.response.context['articles'], Article.objects.all())
 
         if os.path.isfile(article.teaser_image.path):
             os.remove(article.teaser_image.path)

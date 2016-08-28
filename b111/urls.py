@@ -18,12 +18,11 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
 
-from articles.views import article_list, \
-    legacy_redirect, ArticleDetailed, CategoryList
+from articles.views import legacy_redirect, ArticleDetailed, CategoryList, AllArticlesList
 
 urlpatterns = [
     url(r'^editor/', admin.site.urls),
-    url(r'^$', article_list, name='article-list'),
+    url(r'^$', AllArticlesList.as_view(), name='article-list'),
     url(r'^lenta/(?P<legacy_url>[-\w]+)$', legacy_redirect, name='legacy-redirect'),
     url(r'^article/(?P<slug>[-\w]+)$', ArticleDetailed.as_view(), name='article-view'),
     url(r'^topic/(?P<slug>[-\w]+)$', CategoryList.as_view(), name='category')

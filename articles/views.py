@@ -15,6 +15,7 @@ class ArticleDetailed(DetailView):
 class CategoryList(ListView):
     model = Category
     template_name = 'articles/category.html'
+    context_object_name = 'articles'
 
     def get_queryset(self):
         self.cat = get_object_or_404(Category, url_alias=self.kwargs['slug'])
@@ -26,9 +27,18 @@ class CategoryList(ListView):
         return context
 
 
+class AllArticlesList(ListView):
+    model = Category
+    template_name = 'articles/article-list.html'
+    context_object_name = 'articles'
+
+    def get_queryset(self):
+        return get_list_or_404(Article.objects.all())
+
+
 def article_list(request):
     articles = get_list_or_404(Article.objects.all())
-    return render(request, 'articles/article-list.html', {'object_list': articles})
+    return render(request, 'articles/article-list.html', {'articles': articles})
 
 
 def legacy_redirect(request, legacy_url):
@@ -37,4 +47,3 @@ def legacy_redirect(request, legacy_url):
         return redirect('article-view', slug=legacy_url, permanent=True)
     else:
         raise Http404("Article does not exist")
-
