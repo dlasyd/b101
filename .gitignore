@@ -8,6 +8,5 @@ b111/__init__.pyc
 b111/__pycache__/
 b111/settings.pyc
 media/
-templates/
 legacy/__pycache__/
 legacy/migrations/__pycache__/

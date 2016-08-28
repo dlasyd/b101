@@ -1,0 +1,17 @@
+{% extends "articles/basic.html" %}
+{% block title %}
+    {{ category.name }}
+{% endblock %}
+{% block content %}
+    <h1>{{ category.name }}</h1>
+    {% for article in articles %}
+        <h2><a href="{% url 'article-view' article.slug %}" class="title-link">{{ article.title }}</a></h2>
+        <p>{{ article.creation_date|date:"l, d F" }}</p>
+        {% if article.teaser_image %}
+            <img width="50%" height="50%" src="{{ article.teaser_image.url }}"/>
+            <p>{{ article.teaser_image.height_field }}</p>
+        {% endif %}
+        {{ article.preview_text|safe }}<a href="{% url 'article-view' article.slug %}">(далее...)</a>
+    {% endfor %}
+{% endblock %}
+
