@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_list_or_404, get_object_or_404, redirect
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect
 from django.http import Http404
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -8,13 +8,12 @@ from .models import Article, Category
 
 class ArticleDetailed(DetailView):
     model = Article
-    template_name = 'articles/single-article.html'
+    template_name = 'articles/article-detailed.html'
     slug_field = 'url_alias'
 
 
 class CategoryList(ListView):
-    model = Category
-    template_name = 'articles/category.html'
+    template_name = 'articles/articles-by-category-list.html'
     context_object_name = 'articles'
 
     def get_queryset(self):
@@ -28,17 +27,9 @@ class CategoryList(ListView):
 
 
 class AllArticlesList(ListView):
-    model = Category
-    template_name = 'articles/article-list.html'
+    model = Article
+    template_name = 'articles/all-articles-list.html'
     context_object_name = 'articles'
-
-    def get_queryset(self):
-        return get_list_or_404(Article.objects.all())
-
-
-def article_list(request):
-    articles = get_list_or_404(Article.objects.all())
-    return render(request, 'articles/article-list.html', {'articles': articles})
 
 
 def legacy_redirect(request, legacy_url):

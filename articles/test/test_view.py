@@ -35,7 +35,7 @@ class ArticleTest(TestCase):
 
     def test_front_page_has_correct_template(self):
         self.assertEqual(self.response.status_code, 200)
-        self.assertTemplateUsed(self.response, 'articles/article-list.html')
+        self.assertTemplateUsed(self.response, 'articles/all-articles-list.html')
 
     def test_article_list_view_contains_article_preview(self):
         article = Article.objects.first()
@@ -53,7 +53,7 @@ class ArticleTest(TestCase):
         self.assertEqual(self.single_article.status_code, 200)
 
     def test_single_page_render_with_correct_template(self):
-        self.assertTemplateUsed(self.single_article, 'articles/single-article.html')
+        self.assertTemplateUsed(self.single_article, 'articles/article-detailed.html')
 
     def test_single_page_contains_article(self):
         self.assertEquals(self.firstArticle, self.single_article.context['article'])
@@ -85,5 +85,5 @@ class ArticleTest(TestCase):
 
     def test_category_has_correct_template(self):
         r = self.client.get('/topic/idei-biznesa')
-        self.assertTemplateUsed(r, 'articles/category.html')
+        self.assertTemplateUsed(r, 'articles/articles-by-category-list.html')
 
