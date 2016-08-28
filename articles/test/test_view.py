@@ -43,7 +43,7 @@ class ArticleTest(TestCase):
             article.teaser_image.save('test_teaser.jpg', File(image), save=True)
         self.response = self.client.get('/')
 
-        self.assertEqual(self.response.context['articles'][0], Article.objects.all()[0])
+        self.assertEqual(self.response.context['object_list'][0], Article.objects.all()[0])
         self.assertContains(self.response, Article.objects.first().teaser_image.url)
         self.assertContains(self.response, Article.objects.first().preview_text)
         # self.assertListEqual(self.response.context['articles'], Article.objects.all())
@@ -82,7 +82,10 @@ class ArticleTest(TestCase):
     def test_category_has_url_address(self):
         r = self.client.get('/topic/idei-biznesa')
         self.assertEqual(r.status_code, 200)
+        self.assertContains(r, 'Идеи бизнеса')
+        self.assertContains(r, self.firstArticle.title)
 
     def test_category_has_correct_template(self):
         r = self.client.get('/topic/idei-biznesa')
         self.assertTemplateUsed(r, 'articles/category.html')
+
