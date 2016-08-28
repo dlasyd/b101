@@ -17,14 +17,17 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
-from articles.views import article_list, single_article, legacy_redirect, category
+
+from articles.views import article_list, \
+    legacy_redirect, category, ArticleDetailed
 
 urlpatterns = [
     url(r'^editor/', admin.site.urls),
     url(r'^$', article_list, name='article-list'),
-    url(r'^article/(?P<url_alias>[a-zA-Z0-9+-]+)$', single_article, name='article-view'),
-    url(r'^lenta/(?P<legacy_url>[a-zA-Z0-9+-]+)$', legacy_redirect, name='legacy-redirect'),
-    url(r'^topic/(?P<category>[a-zA-Z0-9+-]+)$', category, name='category')
+    # url(r'^article/(?P<url_alias>[-\w]+)$', single_article, name='article-view'),
+    url(r'^lenta/(?P<legacy_url>[-\w]+)$', legacy_redirect, name='legacy-redirect'),
+    url(r'^article/(?P<slug>[-\w]+)$', ArticleDetailed.as_view(), name='article-view'),
+    url(r'^topic/(?P<category>[-\w]+)$', category, name='category')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 admin.site.site_header = "Управление сайтом Business101.ru"

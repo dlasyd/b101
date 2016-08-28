@@ -1,6 +1,14 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404, redirect
-from .models import Article, Category
 from django.http import Http404
+from django.views.generic.detail import DetailView
+
+from .models import Article, Category
+
+
+class ArticleDetailed(DetailView):
+    model = Article
+    template_name = 'articles/single-article.html'
+    slug_field = 'url_alias'
 
 
 def article_list(request):
@@ -16,7 +24,7 @@ def single_article(request, url_alias):
 def legacy_redirect(request, legacy_url):
     article = get_object_or_404(Article, url_alias=legacy_url)
     if article.legacy:
-        return redirect('article-view', url_alias=legacy_url, permanent=True)
+        return redirect('article-view', slug=legacy_url, permanent=True)
     else:
         raise Http404("Article does not exist")
 
