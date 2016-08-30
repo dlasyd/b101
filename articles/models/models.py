@@ -8,6 +8,8 @@ from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 
+from .managers import ArticleManager
+
 
 class Article(models.Model):
     title = models.CharField(max_length=200)
@@ -28,6 +30,8 @@ class Article(models.Model):
     state = models.CharField(default=1,
                              choices=(('1', "Not Published"), ('2', "Staged for publication"), ('3', "Published")),
                              max_length=1,)
+
+    objects = ArticleManager()
 
     def save(self, *args, **kwargs):
         if self.id and self.published_date is None and self.state == '3':

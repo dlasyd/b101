@@ -25,6 +25,7 @@ class FunctionalTests(StaticLiveServerTestCase):
         self.article1.author = u1
         self.article1.category = self.cat1
         self.article1.creation_date = timezone.now()
+        self.article1.state = '3'
         self.article1.save()
 
         with open('articles/test/resources/test_teaser.jpg', 'rb') as image:
@@ -37,6 +38,7 @@ class FunctionalTests(StaticLiveServerTestCase):
         self.article2.author = u1
         self.article2.category = self.cat1
         self.article2.creation_date = timezone.now()
+        self.article2.state = '3'
         self.article2.save()
 
         # why doesn't article.objects.create work here?

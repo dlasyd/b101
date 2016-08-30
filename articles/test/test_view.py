@@ -10,24 +10,26 @@ from articles.models import Article, Category
 class ArticleTest(TestCase):
     def setUp(self):
         User.objects.create()
-        nata = User.objects.first()
+        self.nata = User.objects.first()
 
         Category.objects.create(name='идеи бизнеса')
-        cat = Category.objects.first()
+        self.cat = Category.objects.first()
 
         Article.objects.create(title='first title',
                                text='low carb diet helps weight loss',
                                preview_text='eat less',
-                               author=nata,
-                               category=cat)
+                               author=self.nata,
+                               category=self.cat,
+                               state='3')
         self.firstArticle = Article.objects.last()
 
         Article.objects.create(title='Второе название',
                                text='second article text, more interesting',
                                preview_text='interesting',
-                               author=nata,
-                               category=cat,
-                               legacy=True)
+                               author=self.nata,
+                               category=self.cat,
+                               legacy=True,
+                               state='3')
         self.secondArticle = Article.objects.last()
 
         self.response = self.client.get('/')
@@ -63,8 +65,23 @@ class ArticleTest(TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertEquals(self.secondArticle, r.context['article'])
 
-    def test_redirect_on_lenta_url_to_article(self):
+    def test_not_published_article_404(self):
+        Article.objects.create(title='Not published',
+                               text='low carb diet helps weight loss',
+                               preview_text='eat less',
+                               author=self.nata,
+                               category=self.cat,
+                               state='1')
+        Article.objects.create(title='staged',
+                               text='low carb diet helps weight loss',
+                               preview_text='eat less',
+                               author=self.nata,
+                               category=self.cat,
+                               state='2')
+        self.assertEqual(self.client.get('/article/not-published').status_code, 404)
+        self.assertEqual(self.client.get('/article/staged').status_code, 404)
 
+    def test_redirect_on_lenta_url_to_article(self):
         response = self.client.get('/lenta/vtoroe-nazvanie')
         self.assertRedirects(response,
                              expected_url='/article/vtoroe-nazvanie',

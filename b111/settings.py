@@ -16,7 +16,7 @@ DB_NAME = os.environ["B101_DB_NAME"]
 DB_USER = os.environ['B101_DB_USER']
 DB_PASSWORD = os.environ["B101_DB_PASSWORD"]
 DB_HOST = os.environ["B101_DB_HOST"]
-DB_PORT= os.environ["B101_DB_PORT"]
+DB_PORT = os.environ["B101_DB_PORT"]
 SECRET_KEY = os.environ["B101_SECRET_KEY"]
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

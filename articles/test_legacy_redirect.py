@@ -21,7 +21,8 @@ class LentaTest(TestCase):
                                preview_text='interesting',
                                author=nata,
                                category=cat,
-                               legacy=True)
+                               legacy=True,
+                               state='3')
 
     def test_redirect_on_lenta_url_to_article(self):
         response = self.client.get('/lenta/legacy-article')

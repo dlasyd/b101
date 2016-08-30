@@ -10,6 +10,10 @@ class ArticleDetailed(DetailView):
     model = Article
     template_name = 'articles/article-detailed.html'
 
+    def get_queryset(self):
+        return Article.objects.published()
+
+
 
 class CategoryList(ListView):
     template_name = 'articles/articles-by-category-list.html'
@@ -29,6 +33,9 @@ class AllArticlesList(ListView):
     model = Article
     template_name = 'articles/all-articles-list.html'
     context_object_name = 'articles'
+
+    def get_queryset(self):
+        return Article.objects.published()
 
 
 def legacy_redirect(request, slug):
