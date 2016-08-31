@@ -4,7 +4,7 @@ from .models import Article, Category, Tag
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title',)
+    list_display = ('title','state', 'published_date')
     list_filter = ('state',)
     filter_horizontal = ('tags', )
 
