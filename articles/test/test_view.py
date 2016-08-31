@@ -31,6 +31,18 @@ class ArticleTest(TestCase):
                                legacy=True,
                                state='3')
         self.secondArticle = Article.objects.last()
+        Article.objects.create(title='Not published 1313',
+                               text='low carb diet helps weight loss',
+                               preview_text='eat less',
+                               author=self.nata,
+                               category=self.cat,
+                               state='1')
+        Article.objects.create(title='staged 1313',
+                               text='low carb diet helps weight loss',
+                               preview_text='eat less',
+                               author=self.nata,
+                               category=self.cat,
+                               state='2')
 
         self.response = self.client.get('/')
         self.single_article = self.client.get('/article/first-title')
@@ -66,20 +78,18 @@ class ArticleTest(TestCase):
         self.assertEquals(self.secondArticle, r.context['article'])
 
     def test_not_published_article_404(self):
-        Article.objects.create(title='Not published',
-                               text='low carb diet helps weight loss',
-                               preview_text='eat less',
-                               author=self.nata,
-                               category=self.cat,
-                               state='1')
-        Article.objects.create(title='staged',
-                               text='low carb diet helps weight loss',
-                               preview_text='eat less',
-                               author=self.nata,
-                               category=self.cat,
-                               state='2')
         self.assertEqual(self.client.get('/article/not-published').status_code, 404)
         self.assertEqual(self.client.get('/article/staged').status_code, 404)
+
+    def test_front_page_shows_only_published(self):
+        self.assertContains(self.client.get('/'), 'first title')
+        self.assertNotContains(self.client.get('/'), 'staged 1313')
+        self.assertNotContains(self.client.get('/'), 'Not published 1313')
+
+    def test_category_page_shows_only_published(self):
+        self.assertContains(self.client.get('/topic/' + self.cat.slug), 'first title')
+        self.assertNotContains(self.client.get('/topic/' + self.cat.slug), 'staged 1313')
+        self.assertNotContains(self.client.get('/topic/' + self.cat.slug), 'Not published 1313')
 
     def test_redirect_on_lenta_url_to_article(self):
         response = self.client.get('/lenta/vtoroe-nazvanie')

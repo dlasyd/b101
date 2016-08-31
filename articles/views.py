@@ -14,14 +14,13 @@ class ArticleDetailed(DetailView):
         return Article.objects.published()
 
 
-
 class CategoryList(ListView):
     template_name = 'articles/articles-by-category-list.html'
     context_object_name = 'articles'
 
     def get_queryset(self):
         self.cat = get_object_or_404(Category, slug=self.kwargs['slug'])
-        return get_list_or_404(Article.objects.filter(category=self.cat))
+        return get_list_or_404(Article.objects.filter(category=self.cat, state='3'))
 
     def get_context_data(self, **kwargs):
         context = super(CategoryList, self).get_context_data(**kwargs)
