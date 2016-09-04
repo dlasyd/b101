@@ -23,9 +23,11 @@ from articles.views import legacy_redirect, ArticleDetailed, CategoryList, AllAr
 urlpatterns = [
     url(r'^editor/', admin.site.urls),
     url(r'^$', AllArticlesList.as_view(), name='article-list'),
+    url(r'^articles/(?P<page>[\d]+)$', AllArticlesList.as_view(), name='article-list-archive'),
     url(r'^lenta/(?P<slug>[-\w]+)$', legacy_redirect, name='legacy-redirect'),
     url(r'^article/(?P<slug>[-\w]+)$', ArticleDetailed.as_view(), name='article-view'),
-    url(r'^topic/(?P<slug>[-\w]+)$', CategoryList.as_view(), name='category')
+    url(r'^topic/(?P<slug>[-\w]+)$', CategoryList.as_view(), name='category'),
+    url(r'^topic/(?P<slug>[-\w]+)/(?P<page>[\d]+)$', CategoryList.as_view(), name='category')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 admin.site.site_header = "Управление сайтом Business101.ru"
