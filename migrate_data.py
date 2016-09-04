@@ -20,14 +20,14 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "b111.settings"
 django.setup()
 
 from django.contrib.auth.models import User
-from articles.models import Article, Category
+from articles.models import Article, Category, Tag
 
-with open('b101.json') as data_file:
+with open('small.json') as data_file:
     data = json.load(data_file)
 
 
 def get_date(string):
-    date = datetime.strptime(string, '%d/%m/%Y - %H:%M')
+    date = datetime.strptime(string, '%m/%d/%Y - %H:%M')
     return date.replace(tzinfo=get_default_timezone())
 
 
@@ -43,19 +43,53 @@ def is_legacy(full_alias):
 def strip_slug(full_alias):
     return full_alias.split('/', 2)[2]
 
+
+def get_or_create_tag(name):
+    if Tag.objects.filter(name=name).exists():
+        return Tag.objects.get(name=name)
+    else:
+        new_tag = Tag()
+        new_tag.name = name
+        new_tag.save()
+        return new_tag
+
+
+def get_tags(line_of_tags):
+    if line_of_tags is None:
+        return []
+    str_tags = line_of_tags.split(', ')
+    tags = []
+    for str_tag in str_tags:
+        tags.append(get_or_create_tag(str_tag))
+    return tags
+
+
+def get_or_create_category(name):
+    if Category.objects.filter(name=name).exists():
+        return Category.objects.get(name=name)
+    else:
+        cat = Category()
+        cat.name = name
+        cat.save()
+        return cat
+
 for node in data['nodes']:
     b101 = node['node']
+
     article = Article()
     article.title = b101['title']
     article.legacy = is_legacy(b101['alias'])
     article.slug = strip_slug(b101['alias'])
     article.text = b101['full_text']
     article.preview_text = b101['body_1']
-    article.category = Category.objects.last()
+    article.category = get_or_create_category(b101['category'])
     article.author = User.objects.last()
     article.published_date = get_date(b101['created'])
     article.state = '3'
     article.save()
+    article.tags = get_tags(b101['tags'])
+    article.save()
+
 
     url = b101['field_image']['src']
     filename = url.split('/')[-1]
@@ -68,3 +102,4 @@ for node in data['nodes']:
         article.teaser_image.save('test_teaser.jpg', File(image), save=True)
 
     os.remove(filename)
+    print(b101['title'])

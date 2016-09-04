@@ -2,6 +2,7 @@ import os
 
 from transliterate import slugify
 
+from django.db.models.deletion import PROTECT
 from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import receiver
@@ -22,10 +23,10 @@ class Article(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     published_date = models.DateTimeField(blank=True, null=True)
 
-    category = models.ForeignKey('Category', on_delete=None)
+    category = models.ForeignKey('Category', on_delete=PROTECT)
     tags = models.ManyToManyField('Tag', blank=True)
 
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=100)
     legacy = models.BooleanField(default=False)
 
     state = models.CharField(default=1,

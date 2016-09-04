@@ -5,6 +5,11 @@
 {% block content %}
     <a href="{% url 'category' article.category.slug  %}">{{ article.category.name }}</a>
     <h1>{{ article.title }}</h1>
+    <p><b>Теги:
+    {% for tag in article.tags.all %}
+       {{ tag.name }},
+    {% endfor %}
+    </b></p>
     {% if article.teaser_image %}
         <img width="50%" height="50%" src="{{ article.teaser_image.url }}"/>
         <p>{{ article.teaser_image.height_field }}</p>
