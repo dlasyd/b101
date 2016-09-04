@@ -24,3 +24,7 @@ class CategoryTest(TestCase):
         with self.assertRaises(IntegrityError):
             Category.objects.create(name='Investing', slug='world')
 
+    def test_no_category_without_name(self):
+        with self.assertRaises(IntegrityError):
+            Category.objects.create(slug='123')
+

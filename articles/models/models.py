@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from django.core.urlresolvers import reverse
+from django.db import IntegrityError
 
 from .managers import ArticleManager
 
@@ -57,6 +58,8 @@ class Category(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
+        if self.name == '':
+            raise IntegrityError('Category name cannot be blank')
         if not self.id and not self.slug:
             # Only set the slug when the object is created.
             self.slug = slugify(self.name, language_code='ru')

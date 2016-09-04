@@ -50,6 +50,7 @@ class FunctionalTests(StaticLiveServerTestCase):
         legacy_article.category = self.cat2
         legacy_article.creation_date = timezone.now()
         legacy_article.legacy = True
+        legacy_article.state = '3'
         legacy_article.save()
 
         self.browser = webdriver.Firefox()
