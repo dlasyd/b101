@@ -88,5 +88,5 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
     when corresponding `MediaFile` object is deleted.
     """
     if instance.teaser_image:
-        if os.path.isfile(instance.file.path):
-            os.remove(instance.file.path)
+        if os.path.isfile(instance.teaser_image.path):
+            os.remove(instance.teaser_image.path)
