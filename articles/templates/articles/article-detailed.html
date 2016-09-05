@@ -11,7 +11,8 @@
     {% endfor %}
     </b></p>
     {% if article.teaser_image %}
-        <img width="50%" height="50%" src="{{ article.teaser_image.url }}"/>
+        <img width="50%" height="50%" src="{{ article.teaser_image.url }}"
+        alt="{{ article.alt }}"/>
         <p>{{ article.teaser_image.height_field }}</p>
     {% endif %}
     <p>{{ article.text|safe }}</p>

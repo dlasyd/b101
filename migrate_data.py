@@ -22,7 +22,9 @@ django.setup()
 from django.contrib.auth.models import User
 from articles.models import Article, Category, Tag
 
-with open('small.json') as data_file:
+User.objects.create()
+
+with open('old500') as data_file:
     data = json.load(data_file)
 
 
@@ -37,7 +39,7 @@ def is_legacy(full_alias):
         return True
     if prefix == 'article':
         return False
-    raise RuntimeError('unknown url prefix')
+    raise RuntimeError()
 
 
 def strip_slug(full_alias):
@@ -75,10 +77,15 @@ def get_or_create_category(name):
 
 for node in data['nodes']:
     b101 = node['node']
+    try:
+        legacy = is_legacy(b101['alias'])
+    except RuntimeError:
+        print('Unknown url: ' + b101['alias'])
+        continue
 
     article = Article()
     article.title = b101['title']
-    article.legacy = is_legacy(b101['alias'])
+    article.legacy = legacy
     article.slug = strip_slug(b101['alias'])
     article.text = b101['full_text']
     article.preview_text = b101['body_1']
@@ -86,20 +93,23 @@ for node in data['nodes']:
     article.author = User.objects.last()
     article.published_date = get_date(b101['created'])
     article.state = '3'
+
     article.save()
     article.tags = get_tags(b101['tags'])
     article.save()
 
+    if b101['field_image'] != None:
+        article.alt = b101['field_image']['alt']
+        article.save()
+        url = b101['field_image']['src']
+        filename = url.split('/')[-1]
+        resource = urllib.request.urlopen(url)
+        output = open(filename, "wb")
+        output.write(resource.read())
+        output.close()
 
-    url = b101['field_image']['src']
-    filename = url.split('/')[-1]
-    resource = urllib.request.urlopen(url)
-    output = open(filename, "wb")
-    output.write(resource.read())
-    output.close()
+        with open(filename, 'rb') as image:
+            article.teaser_image.save('test_teaser.jpg', File(image), save=True)
 
-    with open(filename, 'rb') as image:
-        article.teaser_image.save('test_teaser.jpg', File(image), save=True)
-
-    os.remove(filename)
+        os.remove(filename)
     print(b101['title'])

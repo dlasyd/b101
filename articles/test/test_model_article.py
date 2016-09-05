@@ -146,3 +146,13 @@ class ArticleModelTest(TestCase):
 
         self.assertEqual(Article.objects.last().published_date, None)
 
+    def test_image_alt_field(self):
+        Article.objects.create(title='Статья для hello',
+                               text='<p>Full text of article, containing html</p>',
+                               preview_text='This is preview text',
+                               author=self.u1,
+                               category=self.cat1,
+                               alt='alt text')
+
+        article = Article.objects.last()
+        self.assertEqual('alt text', article.alt)

@@ -19,6 +19,7 @@ class Article(models.Model):
     preview_text = models.TextField()
     text = models.TextField()
     teaser_image = models.ImageField(upload_to="teaser-images", blank=True)
+    alt = models.CharField(max_length=200, blank=True)
 
     creation_date = models.DateTimeField(auto_now_add=True)
     published_date = models.DateTimeField(blank=True, null=True)
