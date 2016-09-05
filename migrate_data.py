@@ -77,11 +77,19 @@ def get_or_create_category(name):
 
 for node in data['nodes']:
     b101 = node['node']
+    if b101['category'] is None:
+        print('Has no category: ' + b101['alias'])
+        continue
     try:
         legacy = is_legacy(b101['alias'])
     except RuntimeError:
         print('Unknown url: ' + b101['alias'])
         continue
+
+    if len(b101['alias']) > 200:
+        print('Url is too long: ' + b101['alias'])
+        continue
+
 
     article = Article()
     article.title = b101['title']
@@ -112,4 +120,4 @@ for node in data['nodes']:
             article.teaser_image.save('test_teaser.jpg', File(image), save=True)
 
         os.remove(filename)
-    print(b101['title'])
+    print('Success: ' + b101['title'])
